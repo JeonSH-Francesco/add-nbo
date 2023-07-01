@@ -37,7 +37,7 @@ int main(int argc,char* argv[]){
 	ret2=ntohl(ret2);
 	result=ret1+ret2;
 
-	printf("%d(0x%x)+%d(0x%x)=%d(0x%x)\n",ret1,ret1,ret2,ret2,result);
+	printf("%d(0x%x)+%d(0x%x)=%d(0x%x)\n",ret1,ret1,ret2,ret2,result,result);
 
 	fclose(fp1);
 	fclose(fp2);
