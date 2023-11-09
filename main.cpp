@@ -1,47 +1,31 @@
 #include <stdio.h>
 #include <stdint.h>
-#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <stdlib.h>
 
-
-int main(int argc,char* argv[]){
-	uint32_t ret1;
-	uint32_t ret2;
-	uint32_t result;
-
-	FILE *fp1=NULL;
-	FILE *fp2=NULL;
-	
-	try{
-	fp1=fopen(argv[1],"rb");
-	fp2=fopen(argv[2],"rb");
-	
-	if(!fp1||!fp2){
-		throw 1;
-	}
-	
-	}
-
-	catch(int n){
-	printf("File open failed.");
-	if(!fp1) fclose(fp1);
-	if(!fp2) fclose(fp2);
-	return 1;
-	}
-
-	
-
-	fread(&ret1,1,sizeof(uint32_t),fp1);
-	fread(&ret2,1,sizeof(uint32_t),fp2);
-	
-	ret1=ntohl(ret1);
-	ret2=ntohl(ret2);
-	result=ret1+ret2;
-
-	printf("%d(0x%x)+%d(0x%x)=%d(0x%x)\n",ret1,ret1,ret2,ret2,result,result);
-
-	fclose(fp1);
-	fclose(fp2);
-	
-	return 0;
+void read_file(char* filename, uint32_t *result) {
+    FILE* file = fopen(filename,"rb");
+    if (file == NULL) {
+        printf("Failed to open the file: %s\n", filename);
+        exit(1);
+    }
+    fread(result, sizeof(uint32_t), 1, file);
+    fclose(file);
+    *result = ntohl(*result);
 }
 
+int main(int argc, char* argv[]) {
+    if (argc != 3) {
+        printf("Usage: %s <file1> <file2>\n", argv[0]);
+        return 1;
+    }
+
+    uint32_t ret1, ret2, result;
+    read_file(argv[1], &ret1);
+    read_file(argv[2], &ret2);
+    
+    result = ret1 + ret2;
+    
+    printf("%u(0x%x) + %u(0x%x) = %u(0x%x)\n", ret1, ret1, ret2, ret2, result, result);
+    return 0;
+}
